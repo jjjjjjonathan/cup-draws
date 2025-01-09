@@ -1,7 +1,9 @@
+import { Bracket } from './components/bracket';
+
 function App() {
   return (
     <>
-      <p>hello world</p>
+      <Bracket />
     </>
   );
 }
