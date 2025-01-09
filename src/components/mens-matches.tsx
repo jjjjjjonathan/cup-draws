@@ -1,5 +1,6 @@
 import { Match } from './match';
 import type { Team } from '@/lib/helpers';
+import { getTeamName } from '@/lib/helpers';
 
 type MensMatchesProps = {
   teams: Team[];
@@ -150,8 +151,4 @@ export function MensMatches({ teams }: MensMatchesProps) {
       </div>
     </div>
   );
-}
-
-function getTeamName(index: number, teams: Team[]) {
-  return teams.length > index ? teams[index].name : `Team ${index + 1}`;
 }

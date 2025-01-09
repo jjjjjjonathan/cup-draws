@@ -4,6 +4,7 @@ import type { Team } from '@/lib/helpers';
 import { PREMIER, createDrawSlips, selectRandomTeam } from '@/lib/helpers';
 import { Button } from './ui/button';
 import { MensMatches } from './mens-matches';
+import { WomensMatches } from './womens-matches';
 
 type BracketProps = {
   firstRoundTeamList: Team[];
@@ -108,7 +109,11 @@ export const Bracket = ({
     <>
       <h1 className='text-4xl font-bold'>{title}</h1>
       <div className='flex flex-col justify-between'>
-        {isMensBracket ? <MensMatches teams={bracketSeeding} /> : null}
+        {isMensBracket ? (
+          <MensMatches teams={bracketSeeding} />
+        ) : (
+          <WomensMatches teams={bracketSeeding} />
+        )}
         <div className='bg-red-300 grid grid-cols-5 gap-x-2'>
           <Card>
             <CardTitle>Round 1 Teams</CardTitle>
@@ -125,14 +130,17 @@ export const Bracket = ({
           <Card>
             <CardTitle>Odds</CardTitle>
             <CardContent className='text-sm'>
-              <ul>
-                {byeTeams.map((team) => (
-                  <li key={team.name}>
-                    {team.name}:{' '}
-                    {((team.drawSlips / seededTeams.length) * 100).toFixed(2)}%
-                  </li>
-                ))}
-              </ul>
+              {byeTeams.length > byeTeamCount ? (
+                <ul>
+                  {byeTeams.map((team) => (
+                    <li key={team.name}>
+                      {team.name}:{' '}
+                      {((team.drawSlips / seededTeams.length) * 100).toFixed(2)}
+                      %
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </CardContent>
           </Card>
           <div className='flex flex-col'>
