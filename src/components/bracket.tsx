@@ -1,48 +1,114 @@
 import { Card, CardContent, CardTitle } from './ui/card';
 import { useState } from 'react';
-
-const PREMIER = 'Premier';
-const CHAMPIONSHIP = 'Championship';
-const LEAGUE2 = 'League2';
-
-type Team = {
-  name: string;
-  division: typeof PREMIER | typeof CHAMPIONSHIP | typeof LEAGUE2;
-};
+import type { Team } from '@/lib/helpers';
+import {
+  PREMIER,
+  CHAMPIONSHIP,
+  LEAGUE2,
+  createDrawSlips,
+  selectRandomTeam,
+} from '@/lib/helpers';
+import { Button } from './ui/button';
 
 export const Bracket = () => {
   const [firstRoundTeams, setFirstRoundTeams] = useState<Team[]>([
-    { name: 'Waterloo United', division: CHAMPIONSHIP },
-    { name: 'Darby FC', division: CHAMPIONSHIP },
-    { name: `Master's FA`, division: CHAMPIONSHIP },
-    { name: 'North Mississauga SC', division: CHAMPIONSHIP },
-    { name: 'Pickering FC', division: CHAMPIONSHIP },
-    { name: 'York United Academy', division: CHAMPIONSHIP },
-    { name: 'Unionville-Milliken SC', division: CHAMPIONSHIP },
-    { name: 'Windsor City FC', division: CHAMPIONSHIP },
-    { name: 'Sudbury Cyclones', division: CHAMPIONSHIP },
-    { name: 'The Borough FC', division: CHAMPIONSHIP },
-    { name: 'Guelph United FC', division: CHAMPIONSHIP },
-    { name: 'Hamilton United', division: CHAMPIONSHIP },
-    { name: 'Rush Canada Academy', division: LEAGUE2 },
-    { name: 'Cambridge United', division: LEAGUE2 },
-    { name: 'Railway City', division: LEAGUE2 },
+    { name: 'Waterloo United', division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: 'Darby FC', division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: `Master's FA`, division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: 'North Mississauga SC', division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: 'Pickering FC', division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: 'York United Academy', division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: 'Unionville-Milliken SC', division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: 'Windsor City FC', division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: 'Sudbury Cyclones', division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: 'The Borough FC', division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: 'Guelph United FC', division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: 'Hamilton United', division: CHAMPIONSHIP, drawSlips: 0 },
+    { name: 'Rush Canada Academy', division: LEAGUE2, drawSlips: 0 },
+    { name: 'Cambridge United', division: LEAGUE2, drawSlips: 0 },
+    { name: 'Railway City', division: LEAGUE2, drawSlips: 0 },
   ]);
   const [byeTeams, setByeTeams] = useState<Team[]>([
-    { name: 'Scrosoppi FC', division: PREMIER },
-    { name: 'Vaughan Azzurri', division: PREMIER },
-    { name: 'Woodbridge Strikers', division: PREMIER },
-    { name: 'North Toronto Nitros', division: PREMIER },
-    { name: 'Simcoe County Rovers', division: PREMIER },
-    { name: 'Alliance United', division: PREMIER },
-    { name: 'Oakville SC', division: PREMIER },
-    { name: 'Burlington SC', division: PREMIER },
-    { name: 'Sigma FC', division: PREMIER },
-    { name: 'ProStars FC', division: PREMIER },
-    { name: 'FC London', division: PREMIER },
-    { name: 'St. Catharines Roma', division: PREMIER },
+    { name: 'Scrosoppi FC', division: PREMIER, drawSlips: 1 },
+    { name: 'Vaughan Azzurri', division: PREMIER, drawSlips: 4 },
+    { name: 'Woodbridge Strikers', division: PREMIER, drawSlips: 8 },
+    { name: 'North Toronto Nitros', division: PREMIER, drawSlips: 14 },
+    { name: 'Simcoe County Rovers', division: PREMIER, drawSlips: 21 },
+    { name: 'Alliance United', division: PREMIER, drawSlips: 30 },
+    { name: 'Oakville SC', division: PREMIER, drawSlips: 40 },
+    { name: 'Burlington SC', division: PREMIER, drawSlips: 49 },
+    { name: 'Sigma FC', division: PREMIER, drawSlips: 62 },
+    { name: 'ProStars FC', division: PREMIER, drawSlips: 76 },
+    { name: 'FC London', division: PREMIER, drawSlips: 92 },
+    { name: 'St. Catharines Roma', division: PREMIER, drawSlips: 102 },
   ]);
   const [bracketSeeding, setBracketSeeding] = useState<Team[]>([]);
+  const seededTeams = createDrawSlips(byeTeams);
+  const [lastSelectedTeam, setLastSelectedTeam] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const message = () => {
+    if (byeTeams.length > 5) {
+      return `${byeTeams.length - 5} team${
+        byeTeams.length - 5 === 1 ? '' : 's'
+      } from round two need to be drawn into round one.`;
+    } else if (byeTeams.length <= 5 && byeTeams.length > 0) {
+      return `${byeTeams.length} team${
+        byeTeams.length === 1 ? '' : 's'
+      } need to be drawn for round two.`;
+    } else if (firstRoundTeams.length === 0) {
+      return 'You have finished with the bracket draw.';
+    } else {
+      return `${firstRoundTeams.length} team${
+        firstRoundTeams.length === 1 ? '' : 's'
+      } need to be drawn into round one.`;
+    }
+  };
+
+  const drawTeam = () => {
+    setErrorMessage('');
+    if (byeTeams.length > 5) {
+      const selectedTeam = selectRandomTeam(seededTeams);
+      setLastSelectedTeam(selectedTeam.name);
+      setFirstRoundTeams((prev) => [...prev, selectedTeam]);
+      setByeTeams((prev) =>
+        prev.filter((team) => team.name !== selectedTeam.name)
+      );
+    } else if (byeTeams.length <= 5 && byeTeams.length > 0) {
+      const selectedTeam = selectRandomTeam(byeTeams);
+      setLastSelectedTeam(selectedTeam.name);
+      setBracketSeeding((prev) => [...prev, selectedTeam]);
+      setByeTeams((prev) =>
+        prev.filter((team) => team.name !== selectedTeam.name)
+      );
+    } else {
+      const selectedTeam = selectRandomTeam(firstRoundTeams);
+      setLastSelectedTeam(selectedTeam.name);
+      // if away team in first round, compare if both teams are in Premier
+      if (bracketSeeding.length % 2 === 0) {
+        if (
+          bracketSeeding[bracketSeeding.length - 1].division === PREMIER &&
+          selectedTeam.division === PREMIER
+        ) {
+          setErrorMessage(
+            `${bracketSeeding[bracketSeeding.length - 1].name} and ${
+              selectedTeam.name
+            } are both in the Premier Division, so this matchup is not valid.`
+          );
+        } else {
+          setBracketSeeding((prev) => [...prev, selectedTeam]);
+          setFirstRoundTeams((prev) =>
+            prev.filter((team) => team.name !== selectedTeam.name)
+          );
+        }
+      } else {
+        setBracketSeeding((prev) => [...prev, selectedTeam]);
+        setFirstRoundTeams((prev) =>
+          prev.filter((team) => team.name !== selectedTeam.name)
+        );
+      }
+    }
+  };
 
   return (
     <div className='flex flex-col justify-between'>
@@ -251,6 +317,29 @@ export const Bracket = () => {
             {byeTeams.map((team) => team.name).join(', ')}
           </CardContent>
         </Card>
+        <Card>
+          <CardTitle>Odds</CardTitle>
+          <CardContent className='text-sm'>
+            <ul>
+              {byeTeams.map((team) => (
+                <li key={team.name}>
+                  {team.name}:{' '}
+                  {((team.drawSlips / seededTeams.length) * 100).toFixed(2)}%
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+        <div className='flex flex-col'>
+          <Button onClick={drawTeam} disabled={firstRoundTeams.length <= 0}>
+            Draw Team
+          </Button>
+          <p>{message()}</p>
+        </div>
+        <div className='flex flex-col'>
+          <p>Last selected team: {lastSelectedTeam}</p>
+          <p>{errorMessage}</p>
+        </div>
       </div>
     </div>
   );
