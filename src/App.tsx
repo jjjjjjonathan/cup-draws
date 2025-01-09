@@ -18,7 +18,6 @@ function App() {
         <Bracket
           firstRoundTeamList={mensFirstRound}
           byeRoundTeamList={mensByeRound}
-          title='L1 Cup (M) 2025'
           byeTeamCount={5}
           isMensBracket={true}
         />
@@ -27,8 +26,7 @@ function App() {
         <Bracket
           firstRoundTeamList={womensFirstRound}
           byeRoundTeamList={womensByeRound}
-          title='L1 Cup (W) 2025'
-          byeTeamCount={8}
+          byeTeamCount={7}
           isMensBracket={false}
         />
       </TabsContent>

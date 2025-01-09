@@ -9,7 +9,6 @@ import { WomensMatches } from './womens-matches';
 type BracketProps = {
   firstRoundTeamList: Team[];
   byeRoundTeamList: Team[];
-  title: string;
   byeTeamCount: number;
   isMensBracket: boolean;
 };
@@ -17,7 +16,6 @@ type BracketProps = {
 export const Bracket = ({
   firstRoundTeamList,
   byeRoundTeamList,
-  title,
   byeTeamCount,
   isMensBracket,
 }: BracketProps) => {
@@ -107,42 +105,26 @@ export const Bracket = ({
 
   return (
     <>
-      <h1 className='text-4xl font-bold'>{title}</h1>
-      <div className='flex flex-col justify-between'>
+      <div className='m-2 p-4'>
         {isMensBracket ? (
           <MensMatches teams={bracketSeeding} />
         ) : (
           <WomensMatches teams={bracketSeeding} />
         )}
-        <div className='bg-red-300 grid grid-cols-5 gap-x-2'>
-          <Card>
-            <CardTitle>Round 1 Teams</CardTitle>
-            <CardContent className='text-sm'>
-              {firstRoundTeams.map((team) => team.name).join(', ')}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Round 2 Teams</CardTitle>
-            <CardContent className='text-sm'>
-              {byeTeams.map((team) => team.name).join(', ')}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Odds</CardTitle>
-            <CardContent className='text-sm'>
-              {byeTeams.length > byeTeamCount ? (
-                <ul>
-                  {byeTeams.map((team) => (
-                    <li key={team.name}>
-                      {team.name}:{' '}
-                      {((team.drawSlips / seededTeams.length) * 100).toFixed(2)}
-                      %
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </CardContent>
-          </Card>
+        <div className='grid grid-cols-4 gap-x-2 pt-2'>
+          <TeamList
+            title='Round 1 teams'
+            teams={firstRoundTeams}
+            shouldCountOdds={false}
+            seededTeams={seededTeams}
+          />
+          <TeamList
+            title='Round 2 teams'
+            teams={byeTeams}
+            shouldCountOdds={byeTeams.length > byeTeamCount}
+            seededTeams={seededTeams}
+          />
+
           <div className='flex flex-col'>
             <Button onClick={drawTeam} disabled={firstRoundTeams.length <= 0}>
               Draw Team
@@ -156,5 +138,35 @@ export const Bracket = ({
         </div>
       </div>
     </>
+  );
+};
+type TeamListProps = {
+  teams: Team[];
+  title: string;
+  shouldCountOdds: boolean;
+  seededTeams: Team[];
+};
+const TeamList = ({
+  teams,
+  title,
+  shouldCountOdds,
+  seededTeams,
+}: TeamListProps) => {
+  return (
+    <Card>
+      <CardTitle className='p-2 text-xl'>{title}</CardTitle>
+      <CardContent className='text-xs grid grid-cols-2 gap-x-2'>
+        {teams.map((team) => (
+          <div className='text-ellipsis flex flex-row justify-between'>
+            <p>{team.name}</p>
+            {shouldCountOdds ? (
+              <span>
+                {((team.drawSlips / seededTeams.length) * 100).toFixed(2)}%
+              </span>
+            ) : null}
+          </div>
+        ))}
+      </CardContent>
+    </Card>
   );
 };
