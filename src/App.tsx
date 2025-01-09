@@ -8,6 +8,8 @@ function App() {
         firstRoundTeamList={mensFirstRound}
         byeRoundTeamList={mensByeRound}
         title='L1 Cup (M) 2025'
+        byeTeamCount={5}
+        isMensBracket={true}
       />
     </>
   );

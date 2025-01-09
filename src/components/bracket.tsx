@@ -1,20 +1,24 @@
-import { Match } from './match';
 import { Card, CardContent, CardTitle } from './ui/card';
 import { useState } from 'react';
 import type { Team } from '@/lib/helpers';
 import { PREMIER, createDrawSlips, selectRandomTeam } from '@/lib/helpers';
 import { Button } from './ui/button';
+import { MensMatches } from './mens-matches';
 
 type BracketProps = {
   firstRoundTeamList: Team[];
   byeRoundTeamList: Team[];
   title: string;
+  byeTeamCount: number;
+  isMensBracket: boolean;
 };
 
 export const Bracket = ({
   firstRoundTeamList,
   byeRoundTeamList,
   title,
+  byeTeamCount,
+  isMensBracket,
 }: BracketProps) => {
   const [firstRoundTeams, setFirstRoundTeams] =
     useState<Team[]>(firstRoundTeamList);
@@ -25,11 +29,11 @@ export const Bracket = ({
   const [errorMessage, setErrorMessage] = useState('');
 
   const message = () => {
-    if (byeTeams.length > 5) {
-      return `${byeTeams.length - 5} team${
-        byeTeams.length - 5 === 1 ? '' : 's'
+    if (byeTeams.length > byeTeamCount) {
+      return `${byeTeams.length - byeTeamCount} team${
+        byeTeams.length - byeTeamCount === 1 ? '' : 's'
       } from round two need to be drawn into round one.`;
-    } else if (byeTeams.length <= 5 && byeTeams.length > 0) {
+    } else if (byeTeams.length <= byeTeamCount && byeTeams.length > 0) {
       return `${byeTeams.length} team${
         byeTeams.length === 1 ? '' : 's'
       } need to be drawn for round two.`;
@@ -44,14 +48,14 @@ export const Bracket = ({
 
   const drawTeam = () => {
     setErrorMessage('');
-    if (byeTeams.length > 5) {
+    if (byeTeams.length > byeTeamCount) {
       const selectedTeam = selectRandomTeam(seededTeams);
       setLastSelectedTeam(selectedTeam.name);
       setFirstRoundTeams((prev) => [...prev, selectedTeam]);
       setByeTeams((prev) =>
         prev.filter((team) => team.name !== selectedTeam.name)
       );
-    } else if (byeTeams.length <= 5 && byeTeams.length > 0) {
+    } else if (byeTeams.length <= byeTeamCount && byeTeams.length > 0) {
       const selectedTeam = selectRandomTeam(byeTeams);
       setLastSelectedTeam(selectedTeam.name);
       setBracketSeeding((prev) => [...prev, selectedTeam]);
@@ -104,158 +108,7 @@ export const Bracket = ({
     <>
       <h1 className='text-4xl font-bold'>{title}</h1>
       <div className='flex flex-col justify-between'>
-        <div className='grid grid-cols-5'>
-          <div className='flex flex-col h-full bg-blue-200 justify-around'>
-            <Match
-              title='Match 1'
-              homeTeam={getTeamName(5, bracketSeeding)}
-              awayTeam={getTeamName(6, bracketSeeding)}
-            />
-            <Match
-              title='Match 2'
-              homeTeam={getTeamName(7, bracketSeeding)}
-              awayTeam={getTeamName(8, bracketSeeding)}
-            />
-            <Match
-              title='Match 3'
-              homeTeam={getTeamName(9, bracketSeeding)}
-              awayTeam={getTeamName(10, bracketSeeding)}
-            />
-            <Match
-              title='Match 4'
-              homeTeam={getTeamName(11, bracketSeeding)}
-              awayTeam={getTeamName(12, bracketSeeding)}
-            />
-            <Match
-              title='Match 5'
-              homeTeam={getTeamName(13, bracketSeeding)}
-              awayTeam={getTeamName(14, bracketSeeding)}
-            />
-            <Match
-              title='Match 6'
-              homeTeam={getTeamName(15, bracketSeeding)}
-              awayTeam={getTeamName(16, bracketSeeding)}
-            />
-            <Match
-              title='Match 7'
-              homeTeam={getTeamName(17, bracketSeeding)}
-              awayTeam={getTeamName(18, bracketSeeding)}
-            />
-            <Match
-              title='Match 8'
-              homeTeam={getTeamName(19, bracketSeeding)}
-              awayTeam={getTeamName(20, bracketSeeding)}
-            />
-            <Match
-              title='Match 9'
-              homeTeam={getTeamName(21, bracketSeeding)}
-              awayTeam={getTeamName(22, bracketSeeding)}
-            />
-            <Match
-              title='Match 10'
-              homeTeam={getTeamName(23, bracketSeeding)}
-              awayTeam={getTeamName(24, bracketSeeding)}
-            />
-            <Match
-              title='Match 11'
-              homeTeam={getTeamName(25, bracketSeeding)}
-              awayTeam={getTeamName(26, bracketSeeding)}
-            />
-          </div>
-          <div className='flex flex-col bg-blue-300 h-full justify-around'>
-            <Match
-              title='Match 12'
-              homeTeam={getTeamName(0, bracketSeeding)}
-              awayTeam='Winner of Match 1'
-            />
-            <Match
-              title='Match 13'
-              homeTeam={getTeamName(1, bracketSeeding)}
-              awayTeam='Winner of Match 2'
-            />
-            <Match
-              title='Match 14'
-              homeTeam={getTeamName(2, bracketSeeding)}
-              awayTeam='Winner of Match 3'
-            />
-            <Match
-              title='Match 15'
-              homeTeam={getTeamName(3, bracketSeeding)}
-              awayTeam='Winner of Match 4'
-            />
-            <Match
-              title='Match 16'
-              homeTeam={getTeamName(4, bracketSeeding)}
-              awayTeam='Winner of Match 5'
-            />
-            <Card>
-              <CardTitle>Match 17</CardTitle>
-              <CardContent className='text-center'>
-                Winner of Match 6 v. Winner of Match 7
-              </CardContent>
-            </Card>
-            <Card>
-              <CardTitle>Match 18</CardTitle>
-              <CardContent className='text-center'>
-                Winner of Match 8 v. Winner of Match 9
-              </CardContent>
-            </Card>
-            <Card>
-              <CardTitle>Match 19</CardTitle>
-              <CardContent className='text-center'>
-                Winner of Match 10 v. Winner of Match 11
-              </CardContent>
-            </Card>
-          </div>
-          <div className='flex flex-col bg-blue-400 justify-around'>
-            <Card>
-              <CardTitle>Match 20</CardTitle>
-              <CardContent className='text-center'>
-                Winner of Match 12 v. Winner of Match 13
-              </CardContent>
-            </Card>
-            <Card>
-              <CardTitle>Match 21</CardTitle>
-              <CardContent className='text-center'>
-                Winner of Match 14 v. Winner of Match 15
-              </CardContent>
-            </Card>
-            <Card>
-              <CardTitle>Match 22</CardTitle>
-              <CardContent className='text-center'>
-                Winner of Match 16 v. Winner of Match 17
-              </CardContent>
-            </Card>
-            <Card>
-              <CardTitle>Match 23</CardTitle>
-              <CardContent className='text-center'>
-                Winner of Match 18 v. Winner of Match 19
-              </CardContent>
-            </Card>
-          </div>
-          <div className='flex flex-col bg-blue-500 justify-around'>
-            <Card>
-              <CardTitle>Match 24</CardTitle>
-              <CardContent className='text-center'>
-                Winner of Match 20 v. Winner of Match 21
-              </CardContent>
-            </Card>
-            <Card>
-              <CardTitle>Match 25</CardTitle>
-              <CardContent className='text-center'>
-                Winner of Match 22 v. Winner of Match 23
-              </CardContent>
-            </Card>
-          </div>
-          <div className='flex flex-col bg-blue-600 justify-around'>
-            <Card>
-              <CardTitle>Match 26</CardTitle>
-              <CardContent className='text-center'>
-                Winner of Match 24 v. Winner of Match 25
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+        {isMensBracket ? <MensMatches teams={bracketSeeding} /> : null}
         <div className='bg-red-300 grid grid-cols-5 gap-x-2'>
           <Card>
             <CardTitle>Round 1 Teams</CardTitle>
@@ -297,7 +150,3 @@ export const Bracket = ({
     </>
   );
 };
-
-function getTeamName(index: number, teams: Team[]) {
-  return teams.length > index ? teams[index].name : `Team ${index + 1}`;
-}
