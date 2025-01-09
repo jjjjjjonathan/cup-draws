@@ -28,7 +28,7 @@ function App() {
           firstRoundTeamList={womensFirstRound}
           byeRoundTeamList={womensByeRound}
           title='L1 Cup (W) 2025'
-          byeTeamCount={8}
+          byeTeamCount={7}
           isMensBracket={false}
         />
       </TabsContent>

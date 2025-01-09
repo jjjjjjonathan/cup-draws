@@ -1,17 +1,21 @@
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from './ui/separator';
 
 type MatchProps = {
-  title: string;
+  matchNumber: number;
   homeTeam: string;
   awayTeam: string;
 };
 
-export const Match = ({ title, homeTeam, awayTeam }: MatchProps) => {
+export const Match = ({ matchNumber, homeTeam, awayTeam }: MatchProps) => {
   return (
     <Card>
-      <CardTitle>{title}</CardTitle>
-      <CardContent className='text-center'>
-        {homeTeam} v. {awayTeam}
+      <CardContent className='space-x-1 flex flex-row items-center w-full'>
+        <div className='my-auto'>{matchNumber}</div>
+        <Separator orientation='vertical' className='bg-black h-8' />
+        <div className=''>
+          {homeTeam} v. {awayTeam}
+        </div>
       </CardContent>
     </Card>
   );

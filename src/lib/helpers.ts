@@ -91,4 +91,5 @@ export const womensFirstRound: Team[] = [
   { name: 'St. Catharines Roma', division: LEAGUE2, drawSlips: 0 },
   { name: 'Cambridge United', division: LEAGUE2, drawSlips: 0 },
   { name: 'Railway City', division: LEAGUE2, drawSlips: 0 },
+  { name: 'Sudbury Cyclones', division: LEAGUE2, drawSlips: 0 },
 ];
