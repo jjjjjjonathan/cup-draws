@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Separator } from './ui/separator';
 
 type MatchProps = {
@@ -9,14 +9,15 @@ type MatchProps = {
 
 export const Match = ({ matchNumber, homeTeam, awayTeam }: MatchProps) => {
   return (
-    <Card>
-      <CardContent className='space-x-1 flex flex-row items-center w-full'>
-        <div className='my-auto'>{matchNumber}</div>
-        <Separator orientation='vertical' className='bg-black h-8' />
+    <Card className='p-1 h-12 w-5/6 mx-auto'>
+      <div className='flex flex-row font-semibold gap-x-2 h-full items-center w-full p-2'>
+        <div className='w-5 text-center'>{matchNumber}</div>
+        <Separator orientation='vertical' className='bg-slate-300 h-full' />
         <div className=''>
-          {homeTeam} v. {awayTeam}
+          <p className='text-ellipsis'>{homeTeam}</p>
+          <p className='text-truncate'>{awayTeam}</p>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 };
