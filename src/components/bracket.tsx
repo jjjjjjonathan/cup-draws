@@ -1,3 +1,4 @@
+import { Match } from './match';
 import { Card, CardContent, CardTitle } from './ui/card';
 import { useState } from 'react';
 import type { Team } from '@/lib/helpers';
@@ -81,6 +82,19 @@ export const Bracket = () => {
       setByeTeams((prev) =>
         prev.filter((team) => team.name !== selectedTeam.name)
       );
+    } else if (
+      firstRoundTeams.filter((team) => team.division === PREMIER).length >
+      firstRoundTeams.filter((team) => team.division !== PREMIER).length
+    ) {
+      const selectedTeam = selectRandomTeam(
+        firstRoundTeams.filter((team) => team.division === PREMIER)
+      );
+      setLastSelectedTeam(selectedTeam.name);
+      setErrorMessage('Forced selection of Premier team');
+      setBracketSeeding((prev) => [...prev, selectedTeam]);
+      setFirstRoundTeams((prev) =>
+        prev.filter((team) => team.name !== selectedTeam.name)
+      );
     } else {
       const selectedTeam = selectRandomTeam(firstRoundTeams);
       setLastSelectedTeam(selectedTeam.name);
@@ -114,128 +128,88 @@ export const Bracket = () => {
     <div className='flex flex-col justify-between'>
       <div className='grid grid-cols-5'>
         <div className='flex flex-col h-full bg-blue-200 justify-around'>
-          <Card>
-            <CardTitle>Match 1</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 5 ? bracketSeeding[5].name : 'Team 1'} v.{' '}
-              {bracketSeeding.length > 6 ? bracketSeeding[6].name : 'Team 2'}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 2</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 7 ? bracketSeeding[7].name : 'Team 3'} v.{' '}
-              {bracketSeeding.length > 8 ? bracketSeeding[8].name : 'Team 4'}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 3</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 9 ? bracketSeeding[9].name : 'Team 5'} v.{' '}
-              {bracketSeeding.length > 10 ? bracketSeeding[10].name : 'Team 6'}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 4</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 11 ? bracketSeeding[11].name : 'Team 7'}{' '}
-              v.{' '}
-              {bracketSeeding.length > 12 ? bracketSeeding[12].name : 'Team 8'}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 5</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 13 ? bracketSeeding[13].name : 'Team 9'}{' '}
-              v.{' '}
-              {bracketSeeding.length > 14 ? bracketSeeding[14].name : 'Team 10'}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 6</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 15 ? bracketSeeding[15].name : 'Team 11'}{' '}
-              v.{' '}
-              {bracketSeeding.length > 16 ? bracketSeeding[16].name : 'Team 12'}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 7</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 17 ? bracketSeeding[17].name : 'Team 13'}{' '}
-              v.{' '}
-              {bracketSeeding.length > 18 ? bracketSeeding[18].name : 'Team 14'}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 8</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 19 ? bracketSeeding[19].name : 'Team 15'}{' '}
-              v.{' '}
-              {bracketSeeding.length > 20 ? bracketSeeding[20].name : 'Team 16'}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 9</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 21 ? bracketSeeding[21].name : 'Team 17'}{' '}
-              v.{' '}
-              {bracketSeeding.length > 22 ? bracketSeeding[22].name : 'Team 18'}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 10</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 23 ? bracketSeeding[23].name : 'Team 19'}{' '}
-              v.{' '}
-              {bracketSeeding.length > 24 ? bracketSeeding[24].name : 'Team 20'}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 11</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 25 ? bracketSeeding[25].name : 'Team 21'}{' '}
-              v.{' '}
-              {bracketSeeding.length > 26 ? bracketSeeding[26].name : 'Team 22'}
-            </CardContent>
-          </Card>
+          <Match
+            title='Match 1'
+            homeTeam={getTeamName(5, bracketSeeding)}
+            awayTeam={getTeamName(6, bracketSeeding)}
+          />
+          <Match
+            title='Match 2'
+            homeTeam={getTeamName(7, bracketSeeding)}
+            awayTeam={getTeamName(8, bracketSeeding)}
+          />
+          <Match
+            title='Match 3'
+            homeTeam={getTeamName(9, bracketSeeding)}
+            awayTeam={getTeamName(10, bracketSeeding)}
+          />
+          <Match
+            title='Match 4'
+            homeTeam={getTeamName(11, bracketSeeding)}
+            awayTeam={getTeamName(12, bracketSeeding)}
+          />
+          <Match
+            title='Match 5'
+            homeTeam={getTeamName(13, bracketSeeding)}
+            awayTeam={getTeamName(14, bracketSeeding)}
+          />
+          <Match
+            title='Match 6'
+            homeTeam={getTeamName(15, bracketSeeding)}
+            awayTeam={getTeamName(16, bracketSeeding)}
+          />
+          <Match
+            title='Match 7'
+            homeTeam={getTeamName(17, bracketSeeding)}
+            awayTeam={getTeamName(18, bracketSeeding)}
+          />
+          <Match
+            title='Match 8'
+            homeTeam={getTeamName(19, bracketSeeding)}
+            awayTeam={getTeamName(20, bracketSeeding)}
+          />
+          <Match
+            title='Match 9'
+            homeTeam={getTeamName(21, bracketSeeding)}
+            awayTeam={getTeamName(22, bracketSeeding)}
+          />
+          <Match
+            title='Match 10'
+            homeTeam={getTeamName(23, bracketSeeding)}
+            awayTeam={getTeamName(24, bracketSeeding)}
+          />
+          <Match
+            title='Match 11'
+            homeTeam={getTeamName(25, bracketSeeding)}
+            awayTeam={getTeamName(26, bracketSeeding)}
+          />
         </div>
         <div className='flex flex-col bg-blue-300 h-full justify-around'>
-          <Card>
-            <CardTitle>Match 12</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 0 ? bracketSeeding[0].name : 'Team 23'}{' '}
-              v. Winner of Match 1
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 13</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 1 ? bracketSeeding[1].name : 'Team 24'}{' '}
-              v. Winner of Match 2
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 14</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 2 ? bracketSeeding[2].name : 'Team 25'}{' '}
-              v. Winner of Match 3
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 15</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 3 ? bracketSeeding[3].name : 'Team 26'}{' '}
-              v. Winner of Match 4
-            </CardContent>
-          </Card>
-          <Card>
-            <CardTitle>Match 16</CardTitle>
-            <CardContent className='text-center'>
-              {bracketSeeding.length > 4 ? bracketSeeding[4].name : 'Team 27'}{' '}
-              v. Winner of Match 5
-            </CardContent>
-          </Card>
+          <Match
+            title='Match 12'
+            homeTeam={getTeamName(0, bracketSeeding)}
+            awayTeam='Winner of Match 1'
+          />
+          <Match
+            title='Match 13'
+            homeTeam={getTeamName(1, bracketSeeding)}
+            awayTeam='Winner of Match 2'
+          />
+          <Match
+            title='Match 14'
+            homeTeam={getTeamName(2, bracketSeeding)}
+            awayTeam='Winner of Match 3'
+          />
+          <Match
+            title='Match 15'
+            homeTeam={getTeamName(3, bracketSeeding)}
+            awayTeam='Winner of Match 4'
+          />
+          <Match
+            title='Match 16'
+            homeTeam={getTeamName(4, bracketSeeding)}
+            awayTeam='Winner of Match 5'
+          />
           <Card>
             <CardTitle>Match 17</CardTitle>
             <CardContent className='text-center'>
@@ -344,3 +318,7 @@ export const Bracket = () => {
     </div>
   );
 };
+
+function getTeamName(index: number, teams: Team[]) {
+  return teams.length > index ? teams[index].name : `Team ${index + 1}`;
+}
