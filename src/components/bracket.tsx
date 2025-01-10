@@ -59,7 +59,7 @@ export const Bracket = ({
         bracketSeeding: [...prev.bracketSeeding],
         drawLog: [
           ...prev.drawLog,
-          `${selectedTeam.name} was drawn and moved into the first-round pot.`,
+          `${selectedTeam.name} were drawn and moved into the first-round pot.`,
         ],
       }));
     } else if (
@@ -76,7 +76,7 @@ export const Bracket = ({
         bracketSeeding: [...prev.bracketSeeding, selectedTeam],
         drawLog: [
           ...prev.drawLog,
-          `${selectedTeam.name} was drawn and placed in the second round.`,
+          `${selectedTeam.name} were drawn and placed in the second round.`,
         ],
       }));
     } else if (
@@ -96,7 +96,7 @@ export const Bracket = ({
         bracketSeeding: [...prev.bracketSeeding, selectedTeam],
         drawLog: [
           ...prev.drawLog,
-          `${selectedTeam.name} was drawn and placed in the first round. A Premier team was purposely chosen to avoid division conflict.`,
+          `${selectedTeam.name} were drawn and placed in the first round. A Premier team was purposely chosen to avoid division conflict.`,
         ],
       }));
     } else {
@@ -114,7 +114,7 @@ export const Bracket = ({
             bracketSeeding: [...prev.bracketSeeding],
             drawLog: [
               ...prev.drawLog,
-              `${selectedTeam.name} was drawn but cannot face another Premier Division team. The club returns to the pot.`,
+              `${selectedTeam.name} were drawn but cannot face another Premier Division team. The club returns to the pot.`,
             ],
           }));
         } else {
@@ -127,7 +127,7 @@ export const Bracket = ({
             bracketSeeding: [...prev.bracketSeeding, selectedTeam],
             drawLog: [
               ...prev.drawLog,
-              `${selectedTeam.name} was drawn and placed in the first round.`,
+              `${selectedTeam.name} were drawn and placed in the first round.`,
             ],
           }));
         }
@@ -141,7 +141,7 @@ export const Bracket = ({
           bracketSeeding: [...prev.bracketSeeding, selectedTeam],
           drawLog: [
             ...prev.drawLog,
-            `${selectedTeam.name} was drawn and placed in the first round.`,
+            `${selectedTeam.name} were drawn and placed in the first round.`,
           ],
         }));
       }
