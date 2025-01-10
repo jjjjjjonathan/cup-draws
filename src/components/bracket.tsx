@@ -5,18 +5,21 @@ import { Button } from './ui/button';
 import { MensMatches } from './mens-matches';
 import { WomensMatches } from './womens-matches';
 import { useAtom } from 'jotai';
-import type { Atom } from '@/App';
+import type { Atom, State } from '@/App';
 
 type BracketProps = {
   byeTeamCount: number;
   isMensBracket: boolean;
   bracketAtom: Atom;
+  resetBracket: () => void;
+  initialState: State;
 };
 
 export const Bracket = ({
   byeTeamCount,
   isMensBracket,
   bracketAtom,
+  initialState,
 }: BracketProps) => {
   const [bracket, setBracket] = useAtom(bracketAtom);
   const seededTeams = createDrawSlips(bracket.byeTeams);
@@ -170,7 +173,13 @@ export const Bracket = ({
               onClick={drawTeam}
               disabled={bracket.firstRoundTeams.length <= 0}
             >
-              Draw Team
+              Draw team
+            </Button>
+            <Button
+              variant='secondary'
+              onClick={() => setBracket(initialState)}
+            >
+              Reset bracket
             </Button>
             <p className='text-lg'>
               Last selected team:{' '}
@@ -213,8 +222,11 @@ const TeamList = ({
       <CardTitle className='p-2 text-xl'>{title}</CardTitle>
       <CardContent className='text-xs grid grid-cols-2 gap-x-2'>
         {teams.map((team) => (
-          <div className='text-ellipsis flex flex-row justify-between'>
-            <p>{team.name}</p>
+          <div
+            className='text-ellipsis flex flex-row justify-between'
+            key={team.name}
+          >
+            <p className='text-truncate'>{team.name}</p>
             {shouldCountOdds ? (
               <span>
                 {((team.drawSlips / seededTeams.length) * 100).toFixed(2)}%
