@@ -1,4 +1,4 @@
-import { Card, CardContent, CardTitle } from './ui/card';
+import { Card, CardContent, CardTitle, CardFooter } from './ui/card';
 import type { Team } from '@/lib/helpers';
 import { PREMIER, createDrawSlips, selectRandomTeam } from '@/lib/helpers';
 import { Button } from './ui/button';
@@ -6,6 +6,8 @@ import { MensMatches } from './mens-matches';
 import { WomensMatches } from './womens-matches';
 import { useAtom } from 'jotai';
 import type { Atom, State } from '@/App';
+import { useCallback } from 'react';
+import { toast } from 'sonner';
 
 type BracketProps = {
   byeTeamCount: number;
@@ -28,20 +30,20 @@ export const Bracket = ({
     if (bracket.byeTeams.length > byeTeamCount) {
       return `${bracket.byeTeams.length - byeTeamCount} team${
         bracket.byeTeams.length - byeTeamCount === 1 ? '' : 's'
-      } from round two need to be drawn into round one.`;
+      } from the Round Two pot need to be drawn into the Round One pot.`;
     } else if (
       bracket.byeTeams.length <= byeTeamCount &&
       bracket.byeTeams.length > 0
     ) {
       return `${bracket.byeTeams.length} team${
         bracket.byeTeams.length === 1 ? '' : 's'
-      } need to be drawn for round two.`;
+      } need to be drawn for Round Two.`;
     } else if (bracket.firstRoundTeams.length === 0) {
       return 'You have finished with the bracket draw.';
     } else {
       return `${bracket.firstRoundTeams.length} team${
         bracket.firstRoundTeams.length === 1 ? '' : 's'
-      } need to be drawn into round one.`;
+      } need to be drawn into Round One.`;
     }
   };
 
@@ -57,7 +59,7 @@ export const Bracket = ({
         bracketSeeding: [...prev.bracketSeeding],
         drawLog: [
           ...prev.drawLog,
-          `${selectedTeam.name} was drawn and moved into the first round pot.`,
+          `${selectedTeam.name} was drawn and moved into the first-round pot.`,
         ],
       }));
     } else if (
@@ -146,6 +148,20 @@ export const Bracket = ({
     }
   };
 
+  const copyToClipboard = useCallback((value: string) => {
+    const handleCopy = async () => {
+      try {
+        await navigator.clipboard.writeText(value);
+      } catch (error) {
+        throw new Error('writeText not supported.');
+      } finally {
+        toast('Copied log to clipboard.');
+      }
+    };
+
+    handleCopy();
+  }, []);
+
   return (
     <>
       <div className='m-2 p-4'>
@@ -167,26 +183,42 @@ export const Bracket = ({
             shouldCountOdds={bracket.byeTeams.length > byeTeamCount}
             seededTeams={seededTeams}
           />
+          <Card className='h-64'>
+            <CardTitle className='p-2 text-xl'>L1 Cup Bracket</CardTitle>
+            <div className='flex flex-col justify-between h-52'>
+              <CardContent className='space-y-6'>
+                <p className='text-lg'>
+                  Last selected team:{' '}
+                  <span className='font-semibold'>
+                    {bracket.lastSelectedTeam}
+                  </span>
+                </p>
+                <p>{message()}</p>
+              </CardContent>
+              <CardFooter className='flex flex-row justify-between items-end'>
+                <Button
+                  onClick={drawTeam}
+                  disabled={bracket.firstRoundTeams.length <= 0}
+                >
+                  Draw team
+                </Button>
+                <Button
+                  variant='secondary'
+                  disabled={bracket.drawLog.length <= 0}
+                  onClick={() => copyToClipboard(bracket.drawLog.join('\n\n'))}
+                >
+                  Copy log
+                </Button>
+                <Button
+                  variant='destructive'
+                  onClick={() => setBracket(initialState)}
+                >
+                  Reset bracket
+                </Button>
+              </CardFooter>
+            </div>
+          </Card>
 
-          <div className='flex flex-col'>
-            <Button
-              onClick={drawTeam}
-              disabled={bracket.firstRoundTeams.length <= 0}
-            >
-              Draw team
-            </Button>
-            <Button
-              variant='secondary'
-              onClick={() => setBracket(initialState)}
-            >
-              Reset bracket
-            </Button>
-            <p className='text-lg'>
-              Last selected team:{' '}
-              <span className='font-semibold'>{bracket.lastSelectedTeam}</span>
-            </p>
-            <p>{message()}</p>
-          </div>
           <Card className='h-64'>
             <CardTitle className='p-2 text-xl'>Draw log</CardTitle>
             <CardContent className='text-xs overflow-y-auto h-48 px-12'>

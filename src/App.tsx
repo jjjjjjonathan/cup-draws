@@ -8,6 +8,7 @@ import {
 } from './lib/helpers';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { atom, useSetAtom } from 'jotai';
+import { Toaster } from './components/ui/sonner';
 
 const logPlaceholder: string[] = [];
 
@@ -45,30 +46,33 @@ export type Atom = typeof mensAtom;
 
 function App() {
   return (
-    <Tabs className='w-full h-full' defaultValue='men'>
-      <TabsList>
-        <TabsTrigger value='men'>Men</TabsTrigger>
-        <TabsTrigger value='women'>Women</TabsTrigger>
-      </TabsList>
-      <TabsContent value='men'>
-        <Bracket
-          byeTeamCount={5}
-          isMensBracket={true}
-          bracketAtom={mensAtom}
-          initialState={initialMensState}
-          resetBracket={resetMensBracket}
-        />
-      </TabsContent>
-      <TabsContent value='women'>
-        <Bracket
-          byeTeamCount={7}
-          isMensBracket={false}
-          bracketAtom={womensAtom}
-          initialState={initialWomensState}
-          resetBracket={resetWomensBracket}
-        />
-      </TabsContent>
-    </Tabs>
+    <>
+      <Tabs className='w-full h-full' defaultValue='men'>
+        <TabsList>
+          <TabsTrigger value='men'>Men</TabsTrigger>
+          <TabsTrigger value='women'>Women</TabsTrigger>
+        </TabsList>
+        <TabsContent value='men'>
+          <Bracket
+            byeTeamCount={5}
+            isMensBracket={true}
+            bracketAtom={mensAtom}
+            initialState={initialMensState}
+            resetBracket={resetMensBracket}
+          />
+        </TabsContent>
+        <TabsContent value='women'>
+          <Bracket
+            byeTeamCount={7}
+            isMensBracket={false}
+            bracketAtom={womensAtom}
+            initialState={initialWomensState}
+            resetBracket={resetWomensBracket}
+          />
+        </TabsContent>
+      </Tabs>
+      <Toaster />
+    </>
   );
 }
 
