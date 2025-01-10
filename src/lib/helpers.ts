@@ -32,7 +32,7 @@ export function getTeamName(index: number, teams: Team[]) {
 
 export const mensFirstRound: Team[] = [
   { name: 'Waterloo United', division: CHAMPIONSHIP, drawSlips: 0 },
-  { name: 'Darby FC', division: CHAMPIONSHIP, drawSlips: 0 },
+  { name: 'Whitby FC', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: `Master's FA`, division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'North Mississauga SC', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'Pickering FC', division: CHAMPIONSHIP, drawSlips: 0 },
