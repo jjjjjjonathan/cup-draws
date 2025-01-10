@@ -111,7 +111,7 @@ export const Bracket = ({
             lastSelectedTeam: selectedTeam.name,
             firstRoundTeams: [...prev.firstRoundTeams],
             byeTeams: [...prev.byeTeams],
-            bracketSeeding: [...prev.bracketSeeding, selectedTeam],
+            bracketSeeding: [...prev.bracketSeeding],
             drawLog: [
               ...prev.drawLog,
               `${selectedTeam.name} was drawn but cannot face another Premier Division team. The club returns to the pot.`,
