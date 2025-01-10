@@ -227,7 +227,9 @@ export const Bracket = ({
                 reversed
               >
                 {bracket.drawLog
-                  .map((item) => <li key={item}>{item}</li>)
+                  .map((item, index) => (
+                    <li key={`${item}-${index}`}>{item}</li>
+                  ))
                   .toReversed()}
               </ol>
             </CardContent>
