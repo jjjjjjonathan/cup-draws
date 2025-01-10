@@ -93,3 +93,5 @@ export const womensFirstRound: Team[] = [
   { name: 'Railway City', division: LEAGUE2, drawSlips: 0 },
   { name: 'Sudbury Cyclones', division: LEAGUE2, drawSlips: 0 },
 ];
+
+export const bracketPlaceholder: Team[] = [];
