@@ -58,7 +58,6 @@ export const mensByeRound: Team[] = [
   { name: 'Oakville SC', division: PREMIER, drawSlips: 40 },
   { name: 'Burlington SC', division: PREMIER, drawSlips: 49 },
   { name: 'Sigma FC', division: PREMIER, drawSlips: 62 },
-  { name: 'ProStars FC', division: PREMIER, drawSlips: 76 },
   { name: 'FC London', division: PREMIER, drawSlips: 92 },
   { name: 'St. Catharines Roma', division: PREMIER, drawSlips: 102 },
 ];
@@ -82,7 +81,6 @@ export const womensFirstRound: Team[] = [
   { name: 'Whitby FC', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'Hamilton United', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'Pickering FC', division: CHAMPIONSHIP, drawSlips: 0 },
-  { name: 'ProStars FC', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'Rush Canada Academy', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'Scrosoppi FC', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'Tecumseh United', division: CHAMPIONSHIP, drawSlips: 0 },
