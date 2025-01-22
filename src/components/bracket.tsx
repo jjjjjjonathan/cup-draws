@@ -125,6 +125,28 @@ export const Bracket = ({
         ],
       }));
     } else if (
+      previousSelectedTeam.division === CHAMPIONSHIP &&
+      previousSelectedTeam.name === 'Sudbury Cyclones' &&
+      selectedTeamIsAway
+    ) {
+      // Men's Sudbury has to be away
+      setBracket((prev) => ({
+        lastSelectedTeam: selectedTeam.name,
+        firstRoundTeams: prev.firstRoundTeams.filter(
+          (team) => team.name !== selectedTeam.name
+        ),
+        byeTeams: [...prev.byeTeams],
+        bracketSeeding: [
+          ...prev.bracketSeeding.slice(0, -1),
+          selectedTeam,
+          previousSelectedTeam,
+        ],
+        drawLog: [
+          ...prev.drawLog,
+          `${selectedTeam.name} were drawn and placed in the first round. Home and away were switched because Sudbury Cyclones need to be an away team.`,
+        ],
+      }));
+    } else if (
       previousSelectedTeam.division === LEAGUE2 &&
       selectedTeam.division === LEAGUE2 &&
       selectedTeamIsAway
@@ -161,28 +183,6 @@ export const Bracket = ({
         drawLog: [
           ...prev.drawLog,
           `${selectedTeam.name} were drawn and placed in the first round. Home and away were switched because a League2 team cannot be the home team.`,
-        ],
-      }));
-    } else if (
-      previousSelectedTeam.division === CHAMPIONSHIP &&
-      previousSelectedTeam.name === 'Sudbury Cyclones' &&
-      selectedTeamIsAway
-    ) {
-      // Men's Sudbury has to be away
-      setBracket((prev) => ({
-        lastSelectedTeam: selectedTeam.name,
-        firstRoundTeams: prev.firstRoundTeams.filter(
-          (team) => team.name !== selectedTeam.name
-        ),
-        byeTeams: [...prev.byeTeams],
-        bracketSeeding: [
-          ...prev.bracketSeeding.slice(0, -1),
-          selectedTeam,
-          previousSelectedTeam,
-        ],
-        drawLog: [
-          ...prev.drawLog,
-          `${selectedTeam.name} were drawn and placed in the first round. Home and away were switched because Sudbury Cyclones need to be an away team.`,
         ],
       }));
     } else {
