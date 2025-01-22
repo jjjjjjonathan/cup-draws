@@ -63,7 +63,7 @@ function App() {
         </TabsContent>
         <TabsContent value='women'>
           <Bracket
-            byeTeamCount={7}
+            byeTeamCount={8}
             isMensBracket={false}
             bracketAtom={womensAtom}
             initialState={initialWomensState}
