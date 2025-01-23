@@ -51,16 +51,15 @@ export const mensFirstRound: Team[] = [
 export const mensByeRound: Team[] = [
   { name: 'Scrosoppi FC', division: PREMIER, drawSlips: 1 },
   { name: 'Vaughan Azzurri', division: PREMIER, drawSlips: 4 },
-  { name: 'Woodbridge Strikers', division: PREMIER, drawSlips: 8 },
-  { name: 'North Toronto Nitros', division: PREMIER, drawSlips: 14 },
-  { name: 'Simcoe County Rovers', division: PREMIER, drawSlips: 21 },
-  { name: 'Alliance United', division: PREMIER, drawSlips: 30 },
-  { name: 'Oakville SC', division: PREMIER, drawSlips: 40 },
-  { name: 'Burlington SC', division: PREMIER, drawSlips: 49 },
-  { name: 'Sigma FC', division: PREMIER, drawSlips: 62 },
-  { name: 'ProStars FC', division: PREMIER, drawSlips: 76 },
-  { name: 'FC London', division: PREMIER, drawSlips: 92 },
-  { name: 'St. Catharines Roma', division: PREMIER, drawSlips: 102 },
+  { name: 'Woodbridge Strikers', division: PREMIER, drawSlips: 9 },
+  { name: 'North Toronto Nitros', division: PREMIER, drawSlips: 16 },
+  { name: 'Simcoe County Rovers', division: PREMIER, drawSlips: 26 },
+  { name: 'Alliance United', division: PREMIER, drawSlips: 38 },
+  { name: 'Oakville SC', division: PREMIER, drawSlips: 52 },
+  { name: 'Burlington SC', division: PREMIER, drawSlips: 64 },
+  { name: 'Sigma FC', division: PREMIER, drawSlips: 80 },
+  { name: 'FC London', division: PREMIER, drawSlips: 96 },
+  { name: 'St. Catharines Roma', division: PREMIER, drawSlips: 114 },
 ];
 
 export const womensByeRound: Team[] = [
@@ -82,7 +81,6 @@ export const womensFirstRound: Team[] = [
   { name: 'Whitby FC', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'Hamilton United', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'Pickering FC', division: CHAMPIONSHIP, drawSlips: 0 },
-  { name: 'ProStars FC', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'Rush Canada Academy', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'Scrosoppi FC', division: CHAMPIONSHIP, drawSlips: 0 },
   { name: 'Tecumseh United', division: CHAMPIONSHIP, drawSlips: 0 },

@@ -1,6 +1,12 @@
 import { Card, CardContent, CardTitle, CardFooter } from './ui/card';
 import type { Team } from '@/lib/helpers';
-import { PREMIER, createDrawSlips, selectRandomTeam } from '@/lib/helpers';
+import {
+  PREMIER,
+  createDrawSlips,
+  selectRandomTeam,
+  LEAGUE2,
+  CHAMPIONSHIP,
+} from '@/lib/helpers';
 import { Button } from './ui/button';
 import { MensMatches } from './mens-matches';
 import { WomensMatches } from './womens-matches';
@@ -47,7 +53,7 @@ export const Bracket = ({
     }
   };
 
-  const drawTeam = () => {
+  const drawSecondRoundTeam = () => {
     if (bracket.byeTeams.length > byeTeamCount) {
       const selectedTeam = selectRandomTeam(seededTeams);
       setBracket((prev) => ({
@@ -62,10 +68,7 @@ export const Bracket = ({
           `${selectedTeam.name} were drawn and moved into the first-round pot.`,
         ],
       }));
-    } else if (
-      bracket.byeTeams.length <= byeTeamCount &&
-      bracket.byeTeams.length > 0
-    ) {
+    } else {
       const selectedTeam = selectRandomTeam(bracket.byeTeams);
       setBracket((prev) => ({
         lastSelectedTeam: selectedTeam.name,
@@ -79,14 +82,116 @@ export const Bracket = ({
           `${selectedTeam.name} were drawn and placed in the second round.`,
         ],
       }));
-    } else if (
-      bracket.firstRoundTeams.filter((team) => team.division === PREMIER)
-        .length >
-      bracket.firstRoundTeams.filter((team) => team.division !== PREMIER).length
+    }
+  };
+
+  const nonPremierMajority =
+    bracket.firstRoundTeams.filter((team) => team.division !== PREMIER).length >
+    bracket.firstRoundTeams.filter((team) => team.division === PREMIER).length;
+
+  const nonLeague2Majority =
+    bracket.firstRoundTeams.filter((team) => team.division !== LEAGUE2).length >
+    bracket.firstRoundTeams.filter((team) => team.division === LEAGUE2).length;
+
+  const drawFirstRoundTeam = () => {
+    let selectionPool = bracket.firstRoundTeams;
+    if (!nonPremierMajority) {
+      // Select from only Premier teams if Premier teams are majority
+      selectionPool = selectionPool.filter((team) => team.division === PREMIER);
+    } else if (!nonLeague2Majority) {
+      // Select from only League2 teams if League2 teams are majority
+      selectionPool = selectionPool.filter((team) => team.division === LEAGUE2);
+    }
+    const selectedTeam = selectRandomTeam(selectionPool);
+
+    const selectedTeamIsAway = bracket.bracketSeeding.length % 2 !== 0;
+    const previousSelectedTeam =
+      bracket.bracketSeeding[bracket.bracketSeeding.length - 1];
+
+    if (
+      previousSelectedTeam.division === PREMIER &&
+      selectedTeam.division === PREMIER &&
+      selectedTeamIsAway
     ) {
-      const selectedTeam = selectRandomTeam(
-        bracket.firstRoundTeams.filter((team) => team.division === PREMIER)
-      );
+      // Premier cannot face Premier
+      setBracket((prev) => ({
+        lastSelectedTeam: selectedTeam.name,
+        firstRoundTeams: [...prev.firstRoundTeams],
+        byeTeams: [...prev.byeTeams],
+        bracketSeeding: [...prev.bracketSeeding],
+        drawLog: [
+          ...prev.drawLog,
+          `${selectedTeam.name} were drawn but cannot face another Premier Division team. The club returns to the pot.`,
+        ],
+      }));
+    } else if (
+      previousSelectedTeam.division === CHAMPIONSHIP &&
+      previousSelectedTeam.name === 'Sudbury Cyclones' &&
+      selectedTeamIsAway
+    ) {
+      // Men's Sudbury has to be away
+      setBracket((prev) => ({
+        lastSelectedTeam: selectedTeam.name,
+        firstRoundTeams: prev.firstRoundTeams.filter(
+          (team) => team.name !== selectedTeam.name
+        ),
+        byeTeams: [...prev.byeTeams],
+        bracketSeeding: [
+          ...prev.bracketSeeding.slice(0, -1),
+          selectedTeam,
+          previousSelectedTeam,
+        ],
+        drawLog: [
+          ...prev.drawLog,
+          `${selectedTeam.name} were drawn and placed in the first round. Home and away were switched because Sudbury Cyclones need to be an away team.`,
+        ],
+      }));
+    } else if (
+      previousSelectedTeam.division === LEAGUE2 &&
+      selectedTeam.division === LEAGUE2 &&
+      selectedTeamIsAway
+    ) {
+      // League2 cannot play against League2
+
+      setBracket((prev) => ({
+        lastSelectedTeam: selectedTeam.name,
+        firstRoundTeams: [...prev.firstRoundTeams],
+        byeTeams: [...prev.byeTeams],
+        bracketSeeding: [...prev.bracketSeeding],
+        drawLog: [
+          ...prev.drawLog,
+          `${selectedTeam.name} were drawn but cannot face another League2 team. The club returns to the pot.`,
+        ],
+      }));
+    } else if (
+      previousSelectedTeam.division === LEAGUE2 &&
+      selectedTeam.division !== LEAGUE2 &&
+      selectedTeamIsAway
+    ) {
+      // League2 must be an away team
+      setBracket((prev) => ({
+        lastSelectedTeam: selectedTeam.name,
+        firstRoundTeams: prev.firstRoundTeams.filter(
+          (team) => team.name !== selectedTeam.name
+        ),
+        byeTeams: [...prev.byeTeams],
+        bracketSeeding: [
+          ...prev.bracketSeeding.slice(0, -1),
+          selectedTeam,
+          previousSelectedTeam,
+        ],
+        drawLog: [
+          ...prev.drawLog,
+          `${selectedTeam.name} were drawn and placed in the first round. Home and away were switched because a League2 team cannot be the home team.`,
+        ],
+      }));
+    } else {
+      // default
+      const addedLogText = !nonPremierMajority
+        ? ' A Premier team was purposely chosen to avoid division conflict.'
+        : !nonLeague2Majority
+        ? ' A League2 team was purposely chosen to avoid division conflict.'
+        : '';
       setBracket((prev) => ({
         lastSelectedTeam: selectedTeam.name,
         firstRoundTeams: prev.firstRoundTeams.filter(
@@ -96,55 +201,9 @@ export const Bracket = ({
         bracketSeeding: [...prev.bracketSeeding, selectedTeam],
         drawLog: [
           ...prev.drawLog,
-          `${selectedTeam.name} were drawn and placed in the first round. A Premier team was purposely chosen to avoid division conflict.`,
+          `${selectedTeam.name} were drawn and placed in the first round.${addedLogText}`,
         ],
       }));
-    } else {
-      const selectedTeam = selectRandomTeam(bracket.firstRoundTeams);
-      if (bracket.bracketSeeding.length % 2 === 0) {
-        const index = bracket.bracketSeeding.length - 1;
-        if (
-          bracket.bracketSeeding[index].division === PREMIER &&
-          selectedTeam.division === PREMIER
-        ) {
-          setBracket((prev) => ({
-            lastSelectedTeam: selectedTeam.name,
-            firstRoundTeams: [...prev.firstRoundTeams],
-            byeTeams: [...prev.byeTeams],
-            bracketSeeding: [...prev.bracketSeeding],
-            drawLog: [
-              ...prev.drawLog,
-              `${selectedTeam.name} were drawn but cannot face another Premier Division team. The club returns to the pot.`,
-            ],
-          }));
-        } else {
-          setBracket((prev) => ({
-            lastSelectedTeam: selectedTeam.name,
-            firstRoundTeams: prev.firstRoundTeams.filter(
-              (team) => team.name !== selectedTeam.name
-            ),
-            byeTeams: [...prev.byeTeams],
-            bracketSeeding: [...prev.bracketSeeding, selectedTeam],
-            drawLog: [
-              ...prev.drawLog,
-              `${selectedTeam.name} were drawn and placed in the first round.`,
-            ],
-          }));
-        }
-      } else {
-        setBracket((prev) => ({
-          lastSelectedTeam: selectedTeam.name,
-          firstRoundTeams: prev.firstRoundTeams.filter(
-            (team) => team.name !== selectedTeam.name
-          ),
-          byeTeams: [...prev.byeTeams],
-          bracketSeeding: [...prev.bracketSeeding, selectedTeam],
-          drawLog: [
-            ...prev.drawLog,
-            `${selectedTeam.name} were drawn and placed in the first round.`,
-          ],
-        }));
-      }
     }
   };
 
@@ -197,7 +256,11 @@ export const Bracket = ({
               </CardContent>
               <CardFooter className='flex flex-row justify-between items-end'>
                 <Button
-                  onClick={drawTeam}
+                  onClick={
+                    bracket.byeTeams.length > 0
+                      ? drawSecondRoundTeam
+                      : drawFirstRoundTeam
+                  }
                   disabled={bracket.firstRoundTeams.length <= 0}
                 >
                   Draw team
@@ -263,7 +326,7 @@ const TeamList = ({
             <p className='text-truncate'>{team.name}</p>
             {shouldCountOdds ? (
               <span>
-                {((team.drawSlips / seededTeams.length) * 100).toFixed(2)}%
+                {((team.drawSlips / seededTeams.length) * 100).toFixed(1)}%
               </span>
             ) : null}
           </div>
