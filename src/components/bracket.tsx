@@ -326,7 +326,7 @@ const TeamList = ({
             <p className='text-truncate'>{team.name}</p>
             {shouldCountOdds ? (
               <span>
-                {((team.drawSlips / seededTeams.length) * 100).toFixed(2)}%
+                {((team.drawSlips / seededTeams.length) * 100).toFixed(1)}%
               </span>
             ) : null}
           </div>
